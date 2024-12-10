@@ -1,0 +1,29 @@
+.about-page {
+    padding: 20px;
+    text-align: center;
+}
+  
+.authors-list {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+  
+.author {
+    border: 1px solid #ff0000;
+    padding: 100px;
+    width: 200px;
+    border-radius: 100px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+  
+.author h2 {
+    margin-top: 10x;
+    font-size: 30px;
+}
+  
+.author p {
+    font-size: 15px;
+    color: #555;
+}
+  

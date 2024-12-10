@@ -1,0 +1,31 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+}
+
+.navbar-logo a {
+    display: block;
+}
+
+.navbar-logo-image {
+    width: 300px; 
+    height: auto;
+}
+
+.navbar-links {
+    list-style-type: none;
+    display: flex;
+    gap: 90px;
+}
+
+.navbar-links li {
+    display: inline;
+}
+
+.navbar-icon {
+    width: 200px; 
+    height: auto;
+}
