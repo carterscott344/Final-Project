@@ -22,6 +22,8 @@ app.listen(port, () => {
 app.use(cors());
 app.use(bodyParser.json());
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "uploads/"); 
@@ -38,7 +40,7 @@ if (!fs.existsSync("uploads")) {
 }
 
 
-app.get("/api/games", (req, res) => {
+app.get("/games", (req, res) => {
     db.query('SELECT * FROM games', (err, results) => {
         if (err) {
             console.error('Error executing query:', err.message);

@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from "react";
-import './Games.css'; // You can style this as needed
+import './Games.css'; 
 
 const Games = () => {
-  const [games, setGames] = useState([]);
+  const [games, setGames] = useState({ platformers: [], kartGames: [], partyGames: [] });
 
   useEffect(() => {
-    fetch("http://localhost:8081/api/games") // Adjust the URL if needed
+    fetch("http://localhost:8081/games") 
       .then((response) => response.json())
-      .then((data) => setGames(data))
+      .then((data) => {
+        const platformers = data.filter(game => game.genre === "Platformer");
+        const kartGames = data.filter(game => game.genre === "Kart Game");
+        const partyGames = data.filter(game => game.genre === "Party Game");
+
+        setGames({ platformers, kartGames, partyGames });
+      })
       .catch((error) => console.error("Error fetching games:", error));
   }, []);
 
   return (
     <div className="games-container">
+      <div className="games-section">
+        <div className="section-bar" id='platformers'>Platformers</div>
         <div className="games-grid">
-          {games.map((game) => (
+          {games.platformers.map((game) => (
             <div className="game-card" key={game.id}>
               <img
-                src={`http://localhost:8081/uploads/${game.usa_boxart}`} 
+                src={`http://localhost:8081/uploads/${game.usa_boxart}`}
                 alt={game.title}
                 className="game-image"
               />
@@ -25,6 +33,37 @@ const Games = () => {
             </div>
           ))}
         </div>
+      </div>
+      <div className="games-section">
+        <div className="section-bar" id='kart'>Kart Games</div>
+        <div className="games-grid">
+          {games.kartGames.map((game) => (
+            <div className="game-card" key={game.id}>
+              <img
+                src={`http://localhost:8081/uploads/${game.usa_boxart}`}
+                alt={game.title}
+                className="game-image"
+              />
+              <h3>{game.title}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="games-section">
+        <div className="section-bar" id='party'>Party Games</div>
+        <div className="games-grid">
+          {games.partyGames.map((game) => (
+            <div className="game-card" key={game.id}>
+              <img
+                src={`http://localhost:8081/uploads/${game.usa_boxart}`}
+                alt={game.title}
+                className="game-image"
+              />
+              <h3>{game.title}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

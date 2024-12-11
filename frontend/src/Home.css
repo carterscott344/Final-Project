@@ -1,0 +1,122 @@
+
+.home-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+  
+.home-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+h2 {
+    justify-content: center;
+}
+  
+.home-header h1 {
+    font-size: 3em;
+    color: #333;
+}
+  
+.home-header p {
+    font-size: 1.2em;
+    color: #777;
+}
+  
+.featured-section {
+    margin-bottom: 50px;
+}
+  
+.featured-section h2 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+  
+.featured-games {
+    display: flex;
+    justify-content: space-around;
+}
+  
+.featured-card {
+    text-align: center;
+    width: 30%;
+}
+  
+.featured-image {
+    width: 275px;
+    height: 275px;
+
+}
+  
+.history-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 50px;
+}
+  
+.history-section h2 {
+    font-size: 2.5em;
+    text-align: center;
+    margin-bottom: 20px;
+}
+  
+.history-section p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #555;
+    text-align: justify;
+}
+  
+.history-images {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+  
+.history-image {
+    width: 275px;
+    height: 275px;
+}
+  
+.legacy-section {
+    margin-bottom: 50px;
+    text-align: center;
+}
+  
+.game-genres {
+    margin-bottom: 50px;
+}
+  
+.game-genres-grid {
+    display: flex;
+    justify-content: space-around;
+}
+  
+.genre-card {
+    width: 30%;
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+  
+.genre-image {
+    width: 275px;
+    height: 275px;
+}
+  
+.genre-card h3 {
+    font-size: 1.8em;
+    margin: 20px 0;
+}
+  
+.genre-card p {
+    font-size: 1em;
+    color: #555;
+}
+  

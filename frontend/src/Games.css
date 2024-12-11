@@ -1,31 +1,75 @@
 .games-container {
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  
-  .games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-  }
-  
-  .game-card {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: center;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-  }
-  
-  .game-image {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-  }
-  
-  .game-card h3 {
-    margin-top: 10px;
-  }
-  
+  padding: 20px;
+  display: block; 
+  max-width: 1200px;  
+  margin: 0 auto; 
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  width: 100%; 
+}
+
+.game-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.game-image {
+  width: 210px;
+  height: 225px;
+  border-radius: 0px;
+}
+
+.game-card h3 {
+  margin-top: 10px;
+}
+
+#platformers {
+  background-color: #43B047; 
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+#kart{
+  background-color: #049CD8;  
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+#party {
+  background-color: #E52521;  
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.section-bar {
+  font-size: 28px; /* Larger text */
+  font-weight: bold; /* Bold text */
+  text-align: center; /* Center the text */
+  padding: 15px 10px; /* Add padding */
+  color: #fff; /* White text for better contrast */
+  border-radius: 8px; /* Rounded corners for style */
+  margin-bottom: 15px; /* Space below the bar */
+}
+
