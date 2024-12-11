@@ -50,3 +50,4 @@ app.get("/games", (req, res) => {
         }
     });
 });
+

@@ -1,5 +1,6 @@
 import React from 'react';
 import './About.css'; // You can add custom styling for the About page here
+import marioJump from './images/marioJump.png'
 
 const About = () => {
   return (
@@ -13,7 +14,7 @@ const About = () => {
           <p>Junior - Computer Science</p>
           <p>cas375@iastate.edu</p>
         </div>
-
+        <img src={marioJump} alt='Mario jumping'></img>
         <div className="author">
           <h2>Davin Myers</h2>
           <p>Sophomore - Software Engineering</p>
