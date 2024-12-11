@@ -43,9 +43,15 @@ const Games = () => {
     return date.toLocaleDateString('en-US'); // Formats the date as MM/DD/YYYY
   };
 
+  const ratingFix = (rating) =>{
+    if(rating === 0){
+      return 'N/A'
+    }
+    return rating
+  }
+
   return (
     <div className="games-container">
-      {/* Your existing game listing UI */}
       <div className="games-section">
         <div className="section-bar" id="platformers">Platformers</div>
         <div className="games-grid">
@@ -61,7 +67,37 @@ const Games = () => {
           ))}
         </div>
       </div>
-      {/* Other game categories */}
+      <div className="games-section">
+        <div className="section-bar" id="kart">Kart Games</div>
+        <div className="games-grid">
+          {games.kartGames.map((game) => (
+            <div className="game-card" key={game.id} onClick={() => openPopup(game)}>
+              <img
+                src={`http://localhost:8081/uploads/${game.usa_boxart}`}
+                alt={game.title}
+                className="game-image"
+              />
+              <h3>{game.title}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="games-section">
+        <div className="section-bar" id="party">Party Games</div>
+        <div className="games-grid">
+          {games.partyGames.map((game) => (
+            <div className="game-card" key={game.id} onClick={() => openPopup(game)}>
+              <img
+                src={`http://localhost:8081/uploads/${game.usa_boxart}`}
+                alt={game.title}
+                className="game-image"
+              />
+              <h3>{game.title}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
+      
 
       {isPopupOpen && currentGame && (
         <div className="popup">
@@ -77,6 +113,8 @@ const Games = () => {
               <p>Platform: {currentGame.platforms}</p>
               <p>US Release Date: {formatDate(currentGame.usa_release_date)}</p>
               <p>Japan Release Date: {formatDate(currentGame.japan_release_date)}</p>
+              <p>MetaCritic Rating: {ratingFix(currentGame.metacritic_rating)}</p>
+              <p>User Rating: {ratingFix(currentGame.average_rating)}</p>
             </div>
             <button onClick={toggleBoxart}>
               Switch to {isUS ? 'Japan' : 'US'} Boxart
