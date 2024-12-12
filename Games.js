@@ -70,6 +70,8 @@ const Games = () => {
          total_ratings = currentGame.total_ratings;
       }
 
+    // average rating is actually the sum of all ratings because i messed up so yeah
+
 
       console.log(average_rating);
       console.log(total_ratings);
@@ -80,18 +82,25 @@ const Games = () => {
       // console.log(formData.get("average_rating"));
       // console.log(formData.get("total_ratings"));
 
-      average_rating = average_rating + document.getElementById("rating").value / (total_ratings + 1);
-      total_ratings = total_ratings + 1;
+      average_rating = Number(average_rating) + Number(document.getElementById("rating").value);
+      total_ratings = Number(total_ratings) + 1;
 
       console.log(average_rating);
       console.log(total_ratings);
 
       const response = await fetch(`http://localhost:8081/games/${id}`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ average_rating, total_ratings}),
         });
 
+        await response.json();
+
         console.log("test3");
+
+        alert("Rating added!");
+    } else {
+      alert("Please enter a number between 1 and 100.");
     }
   }
 
@@ -159,14 +168,14 @@ const Games = () => {
               <p>US Release Date: {formatDate(currentGame.usa_release_date)}</p>
               <p>Japan Release Date: {formatDate(currentGame.japan_release_date)}</p>
               <p>MetaCritic Rating: {ratingFix(currentGame.metacritic_rating)}</p>
-              <p>User Rating: {ratingFix(currentGame.average_rating)}</p>
+              <p>User Rating: {Number(ratingFix(currentGame.average_rating)) / Number(currentGame.total_ratings)}</p>
             </div>
             <button onClick={toggleBoxart}>
               Switch to {isUS ? 'Japan' : 'US'} Boxart
             </button>
             <input id="rating" type="number"></input>
             <button onClick={() => submitRating(currentGame.id)}>
-              Submit rating for this game 0-100 only
+              Submit rating for this game
             </button>
 
 
