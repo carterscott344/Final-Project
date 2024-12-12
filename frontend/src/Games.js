@@ -6,6 +6,8 @@ const Games = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentGame, setCurrentGame] = useState(null);
   const [isUS, setIsUS] = useState(true); // Track whether US or Japan boxart is displayed
+  const [ratings, setRatings] = useState([]); // State to hold ratings list
+  const [isRatingsVisible, setIsRatingsVisible] = useState(false); // Control visibility of ratings list
   const [rating, setRating] = useState(''); // Track user's rating
   const [isRatingSubmitted, setIsRatingSubmitted] = useState(false); // Track if the rating is submitted
 
@@ -25,9 +27,27 @@ const Games = () => {
   const openPopup = (game) => {
     setCurrentGame(game);
     setIsPopupOpen(true);
-    setRating(''); // Reset the rating field
-    setIsRatingSubmitted(false); // Reset submission status
+    setRating('');
+    setIsRatingSubmitted(false);
+    setIsRatingsVisible(false);
+  
+    // Fetch ratings for the selected game
+    fetch(`http://localhost:8081/games/${game.id}/ratings`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setRatings(data); // Ensure that only arrays are set as ratings
+        } else {
+          console.error("Unexpected ratings data format:", data);
+          setRatings([]); // Set an empty array if data isn't in the correct format
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching ratings:', error);
+        setRatings([]); // Reset to an empty array if an error occurs
+      });
   };
+  
 
   const closePopup = () => {
     setIsPopupOpen(false);
@@ -43,12 +63,62 @@ const Games = () => {
     return date.toLocaleDateString('en-US'); // Formats the date as MM/DD/YYYY
   };
 
-  const ratingFix = (rating) =>{
-    if(rating === 0){
-      return 'N/A'
+  const ratingFix = (rating) => {
+    if (rating == 0) {
+      return 'N/A';
     }
-    return rating
-  }
+    return rating;
+  };
+
+  const submitRating = async (id) => {
+    const newRating = Number(document.getElementById("rating").value);
+    if (newRating >= 0 && newRating <= 100) {
+      let average_rating = currentGame.average_rating || 0;
+      let total_ratings = currentGame.total_ratings || 0;
+
+      average_rating = average_rating + newRating;
+      total_ratings = total_ratings + 1;
+
+      // Send updated ratings to the backend
+      const response = await fetch(`http://localhost:8081/games/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ average_rating, total_ratings }),
+      });
+
+      const data = await response.json();
+      alert("Rating added!");
+    } else {
+      alert("Please enter a number between 0 and 100.");
+    }
+  };
+
+  const deleteRating = (index) => {
+    fetch(`http://localhost:8081/games/${currentGame.id}/ratings/${index}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setRatings(data.ratings); // Update the state with the new ratings list
+      })
+      .catch((error) => console.error('Error deleting rating:', error));
+  };
+
+  const updateRating = (index, newRating) => {
+    fetch(`http://localhost:8081/games/${currentGame.id}/ratings/${index}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ newRating }),
+    })
+      .then((response) => response.json())
+      .then((data) => setRatings(data.ratings))
+      .catch((error) => console.error('Error updating rating:', error));
+  };
+
+  // Toggle ratings list visibility
+  const toggleRatingsVisibility = () => {
+    setIsRatingsVisible(!isRatingsVisible);
+  };
 
   return (
     <div className="games-container">
@@ -67,6 +137,7 @@ const Games = () => {
           ))}
         </div>
       </div>
+
       <div className="games-section">
         <div className="section-bar" id="kart">Kart Games</div>
         <div className="games-grid">
@@ -82,6 +153,7 @@ const Games = () => {
           ))}
         </div>
       </div>
+
       <div className="games-section">
         <div className="section-bar" id="party">Party Games</div>
         <div className="games-grid">
@@ -97,7 +169,6 @@ const Games = () => {
           ))}
         </div>
       </div>
-      
 
       {isPopupOpen && currentGame && (
         <div className="popup">
@@ -114,13 +185,39 @@ const Games = () => {
               <p>US Release Date: {formatDate(currentGame.usa_release_date)}</p>
               <p>Japan Release Date: {formatDate(currentGame.japan_release_date)}</p>
               <p>MetaCritic Rating: {ratingFix(currentGame.metacritic_rating)}</p>
-              <p>User Rating: {ratingFix(currentGame.average_rating)}</p>
+              <p>Average User Rating: {Number(ratingFix(currentGame.average_rating)) / Number(currentGame.total_ratings)}</p>
             </div>
             <button onClick={toggleBoxart}>
               Switch to {isUS ? 'Japan' : 'US'} Boxart
             </button>
+            <input id="rating" type="number" placeholder="Enter your rating" />
+            <button onClick={() => submitRating(currentGame.id)}>
+              Submit rating for this game
+            </button>
 
-            {}
+            {/* Button to toggle the ratings list visibility */}
+            <button onClick={toggleRatingsVisibility}>
+              {isRatingsVisible ? 'Hide Ratings' : 'Show Ratings'}
+            </button>
+
+            {/* Scrollable ratings list */}
+            {isRatingsVisible && (
+              <div className="ratings-list">
+                <h4>All Ratings</h4>
+                <ul>
+                  {ratings.map((rating, index) => (
+                    <li key={index}>
+                      <span>Rating: {rating}</span>
+                      <button onClick={() => deleteRating(index)}>Delete</button>
+                      <button onClick={() => {
+                        const newRating = prompt('Enter new rating:', rating);
+                        if (newRating) updateRating(index, newRating);
+                      }}>Update</button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       )}

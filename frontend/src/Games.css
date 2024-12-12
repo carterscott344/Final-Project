@@ -87,49 +87,43 @@
   z-index: 9999; 
 }
 
+/* Popup content container */
 .popup-content {
-  background-color: grey;
-  padding: 20px;
-  border-radius: 8px;
   width: 80%;
-  max-width: 600px;
+  max-height: 80vh; /* Make the height 80% of the viewport */
+  overflow-y: auto; /* Add vertical scroll if content exceeds the max height */
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
-  overflow: auto; 
 }
 
-.popup-image {
-  width: 400px;
-  height: 400px; 
-  margin-bottom: 20px; 
-  border-radius: 1px;
-
+/* This is the area where ratings are displayed */
+.ratings-list {
+  max-height: 300px; /* Limit the height of the ratings list */
+  overflow-y: auto; /* Allow vertical scrolling if needed */
 }
 
-
-.popup-details {
-  font-size: 20px;
-  color: white;
+/* Styling for individual rating list items */
+.ratings-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
-
-button {
-  padding: 8px 16px;
+.ratings-list button {
+  margin-left: 5px;
+  padding: 5px 10px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: crimson;
-  color: whi;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
+.ratings-list button:hover {
+  background-color: #0056b3;
 }
-
