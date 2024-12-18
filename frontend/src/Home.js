@@ -4,6 +4,10 @@ import './Home.css';
 const Home = () => {
   const [games, setGames] = useState([]);
 
+  const randomNumberGen = () => {
+    return Math.floor(Math.random() * 47) + 1;
+  }
+
   useEffect(() => {
     fetch("http://localhost:8081/games")
       .then((response) => response.json())
@@ -23,7 +27,7 @@ const Home = () => {
       <section className="featured-section">
         <h2>Featured Games</h2>
         <div className="featured-games">
-          {games.slice(0, 3).map((game) => (
+          {games.sort(() => Math.random() - 0.5).slice(0, 3).map((game) => (
             <div key={game.id} className="featured-card">
               <img
                 src={`http://localhost:8081/uploads/${game.usa_boxart}`}

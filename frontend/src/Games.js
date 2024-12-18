@@ -12,7 +12,7 @@ const Games = () => {
   const [isRatingSubmitted, setIsRatingSubmitted] = useState(false); // Track if the rating is submitted
 
   useEffect(() => {
-    fetch('http://localhost:8081/games')
+    fetch(`http://localhost:8081/games`)
       .then((response) => response.json())
       .then((data) => {
         const platformers = data.filter(game => game.genre === 'Platformer');
@@ -64,7 +64,7 @@ const Games = () => {
   };
 
   const ratingFix = (rating) => {
-    if (rating == 0) {
+    if (rating === 0 || Number.isNaN(rating)) {
       return 'N/A';
     }
     return rating;
@@ -73,47 +73,81 @@ const Games = () => {
   const submitRating = async (id) => {
     const newRating = Number(document.getElementById("rating").value);
     if (newRating >= 0 && newRating <= 100) {
-      let average_rating = currentGame.average_rating || 0;
-      let total_ratings = currentGame.total_ratings || 0;
+        try {
+            const response = await fetch(`http://localhost:8081/games/${id}/submitRating`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ newRating }),
+            });
 
-      average_rating = average_rating + newRating;
-      total_ratings = total_ratings + 1;
+            if (response.ok) {
+                const data = await response.json();
+                setRatings(data.ratings); // Update the local ratings list with the new ratings
+                alert("Rating added successfully!");
+            } else {
+                const errorData = await response.json();
+                alert(`Failed to add rating: ${errorData.error}`);
+            }
+        } catch (error) {
+            console.error("Error submitting rating:", error);
+            alert("An error occurred while submitting the rating.");
+        }
+    } else {
+        alert("Please enter a number between 0 and 100.");
+    }
+};
 
-      // Send updated ratings to the backend
-      const response = await fetch(`http://localhost:8081/games/${id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ average_rating, total_ratings }),
+
+  
+
+const deleteRating = async (index) => {
+  try {
+      const response = await fetch(`http://localhost:8081/games/${currentGame.id}/ratings/${index}`, {
+          method: "DELETE",
       });
 
-      const data = await response.json();
-      alert("Rating added!");
+      if (response.ok) {
+          const data = await response.json();
+          setRatings(data.ratings);
+          alert("Rating deleted successfully!");
+      } else {
+          const errorData = await response.json();
+          alert(`Failed to delete rating: ${errorData.error}`);
+      }
+  } catch (error) {
+      console.error("Error deleting rating:", error);
+      alert("An error occurred while deleting the rating.");
+  }
+};
+
+
+  const updateRating = async (index) => {
+    const newRating = Number(prompt('Enter your updated rating:', ''));
+    if (newRating >= 0 && newRating <= 100) {
+        try {
+            const response = await fetch(`http://localhost:8081/games/${currentGame.id}/updateRating/${index}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ newRating }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setRatings(data.ratings);
+                alert("Rating updated successfully!");
+            } else {
+                const errorData = await response.json();
+                alert(`Failed to update rating: ${errorData.error}`);
+            }
+        } catch (error) {
+            console.error("Error updating rating:", error);
+            alert("An error occurred while updating the rating.");
+        }
     } else {
-      alert("Please enter a number between 0 and 100.");
+        alert("Please enter a valid number between 0 and 100.");
     }
-  };
+};
 
-  const deleteRating = (index) => {
-    fetch(`http://localhost:8081/games/${currentGame.id}/ratings/${index}`, {
-      method: 'DELETE',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setRatings(data.ratings); // Update the state with the new ratings list
-      })
-      .catch((error) => console.error('Error deleting rating:', error));
-  };
-
-  const updateRating = (index, newRating) => {
-    fetch(`http://localhost:8081/games/${currentGame.id}/ratings/${index}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ newRating }),
-    })
-      .then((response) => response.json())
-      .then((data) => setRatings(data.ratings))
-      .catch((error) => console.error('Error updating rating:', error));
-  };
 
   // Toggle ratings list visibility
   const toggleRatingsVisibility = () => {
@@ -185,7 +219,7 @@ const Games = () => {
               <p>US Release Date: {formatDate(currentGame.usa_release_date)}</p>
               <p>Japan Release Date: {formatDate(currentGame.japan_release_date)}</p>
               <p>MetaCritic Rating: {ratingFix(currentGame.metacritic_rating)}</p>
-              <p>Average User Rating: {Number(ratingFix(currentGame.average_rating)) / Number(currentGame.total_ratings)}</p>
+              <p>Average User Rating: {ratingFix(Number(currentGame.average_rating))}</p>
             </div>
             <button onClick={toggleBoxart}>
               Switch to {isUS ? 'Japan' : 'US'} Boxart
@@ -211,11 +245,12 @@ const Games = () => {
                       <button onClick={() => deleteRating(index)}>Delete</button>
                       <button onClick={() => {
                         const newRating = prompt('Enter new rating:', rating);
-                        if (newRating) updateRating(index, newRating);
+                        if (newRating) updateRating(index, Number(newRating));
                       }}>Update</button>
                     </li>
                   ))}
                 </ul>
+
               </div>
             )}
           </div>
